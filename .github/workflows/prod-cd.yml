@@ -1,0 +1,58 @@
+name: Prod Build and Deploy
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+env:
+  env_name: prod
+  VITE_SITE_KEY: "6Lf3zXIpAAAAAMylMhQmIeu3wSj71HllwQlc8m0x"
+  VITE_MODE: 'production'
+  SITE_SECRET: ${{ secrets.PROD_SITE_SECRET }}
+  VITE_BACKEND_URL: "https://api.viewfi.io"
+  VITE_ROWND_APP_KEY: "key_nb0lvlpxb0h0u0lo0a46dfs9"
+  GENERATE_SOURCEMAP: false
+  VITE_BASE_URL: "https://video.viewfi.io"
+  VITE_METAKEEP_APP_ID: "21bd5bf0-e9db-4c95-a65b-a6e67ea68c23"
+  VITE_GOOGLE_CLIENT_ID: '486270388645-4c4h1h71or4mlpb37dhh4rr093khpam9.apps.googleusercontent.com'
+  VITE_POSTHOG_KEY: "phc_K8HG2VIK6EoOh7EaDae8tKfYb3T40jP1GOZtEXHv22M"
+  VITE_POSTHOG_HOST: "https://us.i.posthog.com"
+  VITE_PROJECT_ID: "widget"
+
+jobs:
+  s3-build-and-deploy:
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Replace env
+        run: |
+          echo "[INFO] env_name=${env_name}"
+          if [[ -f .env.${env_name} ]]; then
+            cp .env.${env_name} .env
+            cat .env
+          else
+            echo "[WARN] .env.${env_name} not found"
+          fi
+          echo "REACT_APP_SITE_KEY=${REACT_APP_SITE_KEY}" >> .env
+          echo "REACT_APP_MODE=${REACT_APP_MODE}" >> .env
+          echo "SITE_SECRET=${SITE_SECRET}" >> .env
+          echo "REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}" >> .env
+          echo "REACT_APP_ROWND_APP_KEY=${REACT_APP_ROWND_APP_KEY}" >> .env
+          echo "GENERATE_SOURCEMAP=${GENERATE_SOURCEMAP}" >> .env
+          echo "REACT_APP_METAKEEP_APP_ID=${REACT_APP_METAKEEP_APP_ID}" >> .env
+          cat .env
+      - name: Shared Build Action
+        uses: vieworks/viewfi.actions/front-s3-build-deploy@main
+        with:
+          iam_role: viewfi-prod-github-oidc-widget
+          node_version: 18
+          s3_bucket: viewfi-prod-widget
+          cloudfront_distribution_id: E351SP5SYCHTY9
+          artifacts_folder: "build"

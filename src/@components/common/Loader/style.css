@@ -1,0 +1,24 @@
+.loader-container {
+    transform-origin: center;
+    overflow: visible;
+  }
+  
+  .car {
+    fill: none;
+    stroke-dasharray: 15, 85;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: travel 1.3s linear infinite;
+    transition: stroke 0.5s ease;
+  }
+  
+  
+  @keyframes travel {
+    0% {
+      stroke-dashoffset: 0;
+    }
+  
+    100% {
+      stroke-dashoffset: 100;
+    }
+  }

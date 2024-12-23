@@ -1,0 +1,56 @@
+name: Dev Build and Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+      - chore/add-pipeline
+
+env:
+  env_name: dev
+  VITE_SITE_KEY: "6LdOHXgpAAAAAPSexCtvWJkbXG8wsRKqMByWPIrf"
+  VITE_BACKEND_URL: "https://api.viewfi-test.com"
+  VITE_ROWND_APP_KEY: "key_rq9bvetp4lwa0lq1w97un35k"
+  GENERATE_SOURCEMAP: false
+  VITE_BASE_URL: "https://video.viewfi-test.com"
+  VITE_METAKEEP_APP_ID: "c5157a94-7a16-466e-8205-f9112a01db70"
+  VITE_METAKEEP_API_KEY: "AzrlH91DbVkl1I4hn93NkZ4BwPvydocilpPpJdWZE6KC"
+  VITE_MODE: 'development'
+  VITE_GOOGLE_CLIENT_ID: '486270388645-4c4h1h71or4mlpb37dhh4rr093khpam9.apps.googleusercontent.com'
+
+jobs:
+  s3-build-and-deploy:
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Replace env
+        run: |
+          echo "[INFO] env_name=${env_name}"
+          if [[ -f .env.${env_name} ]]; then
+            cp .env.${env_name} .env
+            cat .env
+          else
+            echo "[WARN] .env.${env_name} not found"
+          fi
+          echo "VITE_SITE_KEY=${VITE_SITE_KEY}" >> .env
+          echo "SITE_SECRET=${SITE_SECRET}" >> .env
+          echo "VITE_BACKEND_URL=${VITE_BACKEND_URL}" >> .env
+          echo "VITE_ROWND_APP_KEY=${VITE_ROWND_APP_KEY}" >> .env
+          echo "GENERATE_SOURCEMAP=${GENERATE_SOURCEMAP}" >> .env
+          echo "VITE_METAKEEP_APP_ID=${VITE_METAKEEP_APP_ID}" >> .env
+          echo "VITE_METAKEEP_API_KEY=${VITE_METAKEEP_API_KEY}" >> .env
+          cat .env
+      - name: Shared Build Action
+        uses: vieworks/viewfi.actions/front-s3-build-deploy@main
+        with:
+          iam_role: viewfi-dev-github-oidc-widget
+          node_version: 18
+          s3_bucket: viewfi-dev-widget
+          cloudfront_distribution_id: E2MUZR067IWHJN
+          artifacts_folder: "build"
