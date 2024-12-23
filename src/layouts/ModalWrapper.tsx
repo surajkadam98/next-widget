@@ -30,7 +30,7 @@ createWeb3Modal({
 });
 
 // Utility function to match dynamic routes
-const matchRoute = (pattern: string, route: string): boolean => {
+export const matchRoute = (pattern: string, route: string): boolean => {
   const regex = new RegExp(
     "^" +
       pattern

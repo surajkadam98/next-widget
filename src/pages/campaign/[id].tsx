@@ -16,16 +16,14 @@ const CampaignPage: React.FC<CampaignPageProps> = ({ id, campaignDetails }) => {
 
 export default CampaignPage;
 
-// Server-side rendering to fetch the `id` parameter
 export async function getServerSideProps(context: { params: { id: string } }) {
   const { id } = context.params;
 
-  // You can use `id` to fetch campaign details, e.g.:
   const response = await fetch(`${BASE_URL}/node/campaign/${id}`);
   const campaignDetails = await response.json();
   return {
     props: {
-      id, // Pass `id` as a prop to the page component
+      id,
       campaignDetails,
     },
   };

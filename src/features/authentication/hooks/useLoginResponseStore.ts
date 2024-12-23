@@ -6,10 +6,11 @@ import { useAuthStore } from "@/@store/authstore";
 import useNftMintDataStore from "@/@store/nftMintDataStore";
 import { useWidgetAppStore } from "@/@store/widgetStore";
 import { renderCampaignRoute, renderSuccessRoute } from "@/@utils";
-import { useRouter } from "next/router";
+import { useModalContext } from "@/@components/context/ModalContext";
 
 const useLoginResponseStore = () => {
-  const router = useRouter()
+    const { navigateModal } = useModalContext();
+  
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
@@ -51,7 +52,7 @@ const useLoginResponseStore = () => {
     setWalletAddress(data.walletAddress)
     setWalletType(data.walletType)
   
-    router.push(
+    navigateModal(
       renderSuccessRoute(
        campaign
       )
@@ -62,17 +63,17 @@ const useLoginResponseStore = () => {
   // Function to handle the state when the claim has not been made
   const handleUnclaimedState = () => {
     if (campaign?.interactiveQuestionId && !isQuizCorrect) {
-      router.push("/quiz");
+      navigateModal("/quiz");
     } else if (
       campaign?.additionalTasks &&
       campaign?.additionalTasks.length > 0 &&
       !isTasksComplete
     ) {
-      router.push("/additional-tasks");
+      navigateModal("/additional-tasks");
     } else if (campaign?.optionalDataId && !isAnswered) {
-      router.push("/data-fields");
+      navigateModal("/data-fields");
     } else
-      router.push(
+      navigateModal(
         renderCampaignRoute(
          campaign
         )

@@ -9,15 +9,14 @@ import { getCSSVarByName } from "@/@utils";
 import Loader from "@/@components/common/Loader";
 import OTPForm from "./OTPForm";
 import { useAPIdataStore } from "@/@store/APIdataStore";
-import { useRouter } from "next/router";
+import { useModalContext } from "@/@components/context/ModalContext";
 
 const OTPVerify = () => {
   const { widgetProp } = useAPIdataStore();
-  const router = useRouter();
-  
+    const { navigateModal, currentUrl } = useModalContext();
   // Access query parameters from router.query
-  const { email } = router.query as { email?: string};
-  const { optedIn } = router.query as { optedIn?: string};
+  const [email, setEmail] = useState("");
+  const [optedIn, setOptedIn] = useState("");
 
 
   const { handleLoginSuccess } = useLoginResponseStore();
@@ -37,7 +36,18 @@ const OTPVerify = () => {
     }
   }, [timeLeft]);
 
+  useEffect(() => {
+    // Match the currentUrl with the expected pattern
+    const match = currentUrl.match(/^\/verify-otp\/([^/]+)\/(true|false)$/);
+    if (match) {
+      const [, emailValue, optedInValue] = match; // Extract email and optedIn
+      setEmail(emailValue);
+      setOptedIn(optedInValue); // Convert to boolean
+    }
+  }, [currentUrl]);
+
   const handleSubmit = async () => {
+    console.log("email", email, otp);
     if (!email || !otp) return;
     try {
       setLoading(true);
@@ -86,7 +96,7 @@ const OTPVerify = () => {
     <div className="relative h-[550px] flex items-center justify-center">
       <button
         className={`absolute top-1 left-1 flex items-center rounded-[60px] px-5 py-2 text-black space-x-1 bg-[#f0f0f0]`}
-        onClick={() => router.push("/")}
+        onClick={() => navigateModal("/")}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

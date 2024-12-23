@@ -21,11 +21,14 @@ import Loader from "@/@components/common/Loader";
 import { getCSSVarByName } from "@/@utils";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useModalContext } from "@/@components/context/ModalContext";
 
 export const emailValidationRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Signin = () => {
   const router = useRouter();
+  const { navigateModal } = useModalContext();
+
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailWarning, setIsEmailWarning] = useState(false);
@@ -37,9 +40,10 @@ const Signin = () => {
     null
   );
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const [optedIn, setOptedIn] = useState(false);
+  const [optedIn, setOptedIn] = useState(true);
   // const { handleLoginSuccess } = useLoginResponseStore();
-  console.log("useAPIdataStore", campaign);
+
+
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const policyCheckbox = event.target;
     if (policyCheckbox.checked) {
@@ -104,6 +108,21 @@ const Signin = () => {
       setIsActiveSignIn(true);
     }
   }, [recaptchaResponse, email]);
+  //   router.push(
+  //     {
+  //       pathname: "/verify-otp", // Keep the same URL
+  //       query: {}, // Don't pass params here to avoid URL change
+  //     },
+  //     undefined,
+  //     { shallow: true }
+  //   );
+
+  //   // Pass state via sessionStorage or a context API instead
+  //   sessionStorage.setItem(
+  //     "verifyOTPParams",
+  //     JSON.stringify({ email, optedIn })
+  //   );
+  // };
 
   const handleEmailLogin = async () => {
     if (!email || !isEmailValid) {
@@ -142,7 +161,9 @@ const Signin = () => {
           try {
             setIsLoading(true);
             await widgetLogin(email, "", "", optedIn);
-            router.push(`/verify-otp/${email}/${optedIn ? "true" : "false"}`);
+            // router.push();
+            navigateModal(`/verify-otp/${email}/${optedIn ? "true" : "false"}`)
+            // navigateToVerifyOTP();
           } catch (error) {
             if (error instanceof AxiosError && error.response?.data?.message) {
               toast.error(error.response?.data?.message);
