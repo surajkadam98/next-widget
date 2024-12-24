@@ -313,16 +313,20 @@ const Signin = () => {
         {!isReCaptchaShowing && (
           <GoogleSignInButton onClick={handleGoogleLogin} />
         )}
-        <div className="w-full flex items-center space-x-3 text-gray-600">
+        {
+          !email && (
+            <div className="w-full flex items-center space-x-3 text-gray-600">
           <hr className="flex-grow"></hr>
           <p className="text-gray-500">Or</p>
           <hr className="flex-grow" />
         </div>
+          )
+        }
         <input
           type="text"
           className={`border-[0.5px] rounded-[59px] border-[#02172E] p-[10px] w-full ${
             isEmailWarning && "border-[#FF0000] shake_input"
-          } outline-widgetBg`}
+          } outline-widgetBg ${email && 'mt-1'}`}
           onChange={handleChangeEmail}
           placeholder={widgetProp?.label?.email || "Enter email address"}
         />
