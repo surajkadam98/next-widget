@@ -61,7 +61,7 @@ const ModalWrapper: React.FC = () => {
           <WagmiProvider config={wagmiConfig}>
             <QueryClientProvider client={queryClient}>
               <GoogleOAuthProvider
-                clientId={process.env.VITE_GOOGLE_CLIENT_ID || ""}
+                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
               >
                 <SolanaWalletProvider>
                   <BaseModal>

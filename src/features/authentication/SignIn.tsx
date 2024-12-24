@@ -1,22 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-unreachable */
 import { useEffect, useState } from "react";
 import ModalHeader from "@/@components/modals/ModalHeader";
 import SubmitButton from "@/@components/buttons/SubmitButton";
 import GoogleSignInButton from "@/@components/buttons/GoogleSignInButton";
 import ReCAPTCHA from "react-google-recaptcha";
 import Checkbox from "@/@components/buttons/Checkbox";
-// import { useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { Tooltip } from "react-tooltip";
 import {
   checkGoogleReCaptcha,
-  // googleLogin,
+  googleLogin,
   widgetLogin,
 } from "@/@services/api";
 import { useAPIdataStore } from "@/@store/APIdataStore";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-// import useLoginResponseStore from "./hooks/useLoginResponseStore";
+import useLoginResponseStore from "./hooks/useLoginResponseStore";
 import Loader from "@/@components/common/Loader";
 import { getCSSVarByName } from "@/@utils";
 import { useRouter } from "next/router";
@@ -41,7 +40,7 @@ const Signin = () => {
   );
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [optedIn, setOptedIn] = useState(true);
-  // const { handleLoginSuccess } = useLoginResponseStore();
+  const { handleLoginSuccess } = useLoginResponseStore();
 
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,30 +60,30 @@ const Signin = () => {
     setIsReCaptchaShowing(hasEnteredEmail > 0);
   };
 
-  // const handleGoogleLoginSuccess = async (codeResponse: any) => {
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await googleLogin(codeResponse.access_token, optedIn);
-  //     await handleLoginSuccess(response.data);
-  //   } catch (error) {
-  //     console.error(error);
-  //     if (error instanceof AxiosError && error.response?.data?.message) {
-  //       toast.error(error.response.data.message);
-  //     } else {
-  //       toast.error("Failed to LogIn! Please try again.");
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const handleGoogleLoginSuccess = async (codeResponse: any) => {
+    try {
+      setIsLoading(true);
+      const response = await googleLogin(codeResponse.access_token, optedIn);
+      await handleLoginSuccess(response.data);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Failed to LogIn! Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // const googleLoginApiCall = useGoogleLogin({
-  //   onSuccess: handleGoogleLoginSuccess,
-  //   onError: (error) => {
-  //     console.log("Login Failed:", error);
-  //     toast.error("Failed to LogIn! Please try again.");
-  //   },
-  // });
+  const googleLoginApiCall = useGoogleLogin({
+    onSuccess: handleGoogleLoginSuccess,
+    onError: (error) => {
+      console.log("Login Failed:", error);
+      toast.error("Failed to LogIn! Please try again.");
+    },
+  });
 
   const handleGoogleLogin = () => {
     const policyCheckbox = document.getElementById(
@@ -95,7 +94,7 @@ const Signin = () => {
       policyCheckbox.classList.add("animate-bounce");
       return;
     }
-    // googleLoginApiCall(); //fixme
+    googleLoginApiCall(); 
   };
 
   useEffect(() => {
@@ -108,21 +107,6 @@ const Signin = () => {
       setIsActiveSignIn(true);
     }
   }, [recaptchaResponse, email]);
-  //   router.push(
-  //     {
-  //       pathname: "/verify-otp", // Keep the same URL
-  //       query: {}, // Don't pass params here to avoid URL change
-  //     },
-  //     undefined,
-  //     { shallow: true }
-  //   );
-
-  //   // Pass state via sessionStorage or a context API instead
-  //   sessionStorage.setItem(
-  //     "verifyOTPParams",
-  //     JSON.stringify({ email, optedIn })
-  //   );
-  // };
 
   const handleEmailLogin = async () => {
     if (!email || !isEmailValid) {

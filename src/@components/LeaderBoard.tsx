@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { ViewFiIcon } from "@/@assets/icons";
 import { ChevronLeftIcon } from "@/@assets/icons/ChevronLeftIcon";
@@ -10,18 +11,20 @@ import { useEffect, useRef, useState } from "react";
 import Loader from './common/Loader';
 import { getCSSVarByName } from '@/@utils';
 import Link from 'next/link';
-import { useRouter } from "next/router";
 
 type Claim = {
   referer: string;
   count: number;
 };
 
-export const LeaderBoard = () => {
-    const router = useRouter();
-    // Access query parameters from router.query
-    const { campaignKey } = router.query as { campaignKey?: string};
+interface ILeaderBoard {
+  campaignKey: string;
+}
 
+export const LeaderBoard: React.FC<ILeaderBoard> = ({
+  campaignKey
+}) => {
+    // Access query parameters from router.query
   const [isFetching, setIsFetching] = React.useState(true);
   const [dark, setDark] = React.useState(false);
   const [logo, setLogo] = React.useState("");
@@ -248,7 +251,7 @@ export const LeaderBoard = () => {
               Click{" "}
               <Link
                 className="underline"
-                href={`${window.location.ancestorOrigins[0]}/c/${campaignKey}`}
+                href={`/c/${campaignKey}`}
                 target="_blank"
               >
                 here to watch
