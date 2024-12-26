@@ -12,7 +12,7 @@ export default function Button({
   text,
   active = true,
   classnames,
-}: ButtonProps): JSX.Element {
+}: ButtonProps) {
   return (
     <button
       onClick={handleClick}

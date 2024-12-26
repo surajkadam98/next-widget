@@ -5,7 +5,7 @@ type OtpInputProps = {
   onOtpChange: (otp: string) => void;
 };
 
-const OTPForm = ({ length, onOtpChange }: OtpInputProps): JSX.Element => {
+const OTPForm = ({ length, onOtpChange }: OtpInputProps) => {
   // State to keep track of the OTP values
   const [tempOtp, setTempOtp] = useState<string[]>(
     new Array(length || 6).fill("")
@@ -83,7 +83,9 @@ const OTPForm = ({ length, onOtpChange }: OtpInputProps): JSX.Element => {
       {tempOtp.map((_, index) => (
         <Fragment key={index}>
           <input
-            ref={(el) => (inputRefs.current[index] = el)} // Assign the ref for each input
+            ref={(el) => {
+              inputRefs.current[index] = el;
+            }}
             onChange={(e) => handleOnchange(e, index)}
             onKeyDown={(e) => handleOnKeyDown(e, index)}
             onPaste={(e) => handleOnPaste(e, index)} 

@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from "react";
 import "./style.css";
 
@@ -6,7 +7,7 @@ type Props = {
 };
 
 const LoaderRound = React.memo<Props>(
-  (props): JSX.Element => (
+  (props) => (
     <div className="loaderWrapper">
       <div className="loaderInner">
         <div style={{ background: props.colorCode }}></div>
