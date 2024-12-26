@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { ViewFiIcon } from "@/@assets/icons/ViewFiIcon";
 import ModalHeader from "@/@components/modals/ModalHeader";
 import Link from "next/link";
