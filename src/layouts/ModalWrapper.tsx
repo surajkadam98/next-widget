@@ -47,7 +47,6 @@ const ModalWrapper: React.FC = () => {
 
   // Get the current route from modal history
   const currentRoute = modalHistory[modalHistory.length - 1] || "/";
-
   // Match the current route to the modalRoutes
   const matchedRoute = modalRoutes.find(({ path }) =>
     matchRoute(path, currentRoute)

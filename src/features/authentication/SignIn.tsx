@@ -18,14 +18,12 @@ import { toast } from "react-toastify";
 import useLoginResponseStore from "./hooks/useLoginResponseStore";
 import Loader from "@/@components/common/Loader";
 import { getCSSVarByName } from "@/@utils";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { useModalContext } from "@/@components/context/ModalContext";
 
 export const emailValidationRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Signin = () => {
-  const router = useRouter();
   const { navigateModal } = useModalContext();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +39,6 @@ const Signin = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [optedIn, setOptedIn] = useState(true);
   const { handleLoginSuccess } = useLoginResponseStore();
-
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const policyCheckbox = event.target;
@@ -145,9 +142,7 @@ const Signin = () => {
           try {
             setIsLoading(true);
             await widgetLogin(email, "", "", optedIn);
-            // router.push();
             navigateModal(`/verify-otp/${email}/${optedIn ? "true" : "false"}`)
-            // navigateToVerifyOTP();
           } catch (error) {
             if (error instanceof AxiosError && error.response?.data?.message) {
               toast.error(error.response?.data?.message);
@@ -233,7 +228,7 @@ const Signin = () => {
               <span
                 className="underline cursor-pointer"
                 onClick={() => {
-                  router.push("/terms");
+                  navigateModal("/terms");
                 }}
               >
                 {" "}

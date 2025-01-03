@@ -27,6 +27,7 @@ import NFTMinting from "./NFTMinting";
 import { useRouter } from "next/router";
 import useNftMintDataStore from "@/@store/nftMintDataStore";
 import NFTMintCard from "./NFTMintCard";
+import { useModalContext } from "@/@components/context/ModalContext";
 
 type NFTMintProps = {
   nftAddress: `0x${string}`;
@@ -71,6 +72,8 @@ const NFTMint = ({
 
   const { isConnected, address } = useAccount();
   const { data: hash, error, writeContract } = useWriteContract();
+  const { navigateModal } = useModalContext();
+  
 
   const [walletAddress, setWalletAddress] = useState<any>(propsAddress);
   const [isModalLoading, setIsModalLoading] = useState<boolean>(false);
@@ -304,7 +307,7 @@ const NFTMint = ({
           setTransactionId(res.data.transactionHash);
           setNftAddress(nftAddress);
           setNftWalletType(walletType);
-          router.push("/nft-mint-success");
+          navigateModal("/nft-mint-success")
         });
       });
     } else {
@@ -330,7 +333,7 @@ const NFTMint = ({
           setTransactionId(res.data.transactionHash);
           setNftAddress(nftAddress);
           setNftWalletType(walletType);
-          router.push("/nft-mint-success");
+          navigateModal("/nft-mint-success");
         });
       });
     }
@@ -390,7 +393,7 @@ const NFTMint = ({
       setTransactionId(hash || "");
       setNftAddress(nftAddress);
       setNftWalletType(walletType);
-      router.push("/nft-mint-success");
+      navigateModal("/nft-mint-success");
     }
   }, [isConfirmed, isConfirming]);
 

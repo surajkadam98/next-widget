@@ -22,7 +22,7 @@ export default function AnimationButton({
     <button
       className={`animated-button ${bgColor} flex items-center justify-between rounded-[60px] p-1 z-20 ${
         whiteBack ? "border border-[#02172E]" : ""
-      }  max-w-fit ${width} ${classnames}`}
+      }  max-w-fit ${width} overflow-hidden  ${classnames}`}
       onClick={handleClick}
     >
       <div

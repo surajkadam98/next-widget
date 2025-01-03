@@ -1,15 +1,16 @@
-import { useRouter } from "next/router";
 import ClaimButton from "@/@components/buttons/ClaimButton";
 import ModalHeader from "@/@components/modals/ModalHeader";
 import { useAPIdataStore } from "@/@store/APIdataStore";
 import { getCSSVarByName } from "@/@utils";
+import { useModalContext } from "../context/ModalContext";
 
 const Claim = () => {
   const { campaign, logo, widgetProp } = useAPIdataStore();
-  const router = useRouter()
+    const { navigateModal } = useModalContext();
+  
 
   const handleClickLearnMore = () => {
-    router.push("/learn-more");
+    navigateModal("/learn-more");
   };
 
   const image =
@@ -38,7 +39,7 @@ const Claim = () => {
         </div>
         <ClaimButton
           onClick={() => {
-            router.push("/");
+            navigateModal("/");
           }}
         />
         <div className="mx-auto h-[0.1px] w-[125px] px-3 bg-clightdark"></div>

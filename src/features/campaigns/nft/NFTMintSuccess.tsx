@@ -175,8 +175,8 @@ const NFTMintSuccess = () => {
     >
       <div
         className={`font-['Clash_Display'] bg-gray-100 rounded-lg mx-auto -mt-[205px] z-40 w-[260px] h-[260px]`}
-        onMouseEnter={handleToggle}
-        onMouseLeave={handleToggle}
+        // onMouseEnter={handleToggle}
+        // onMouseLeave={handleToggle}
       >
         <div className="overflow-hidden relative">
           <Suspense
@@ -196,7 +196,7 @@ const NFTMintSuccess = () => {
           <div className="w-full h-full absolute bottom-0">
             <div  //  overlay effect for hover
               className={`flex flex-col justify-end w-full h-full p-3 ${
-                isDetails ? "bg-black bg-opacity-30" : "bg-nft-success-gradient"
+                isDetails ? "bg-gradient-to-t from-black via-black/60 to-transparent" : "bg-nft-success-gradient"
               } rounded-lg`}>
                            <div
               className="flex justify-between items-center gap-1 cursor-pointer"
@@ -215,7 +215,7 @@ const NFTMintSuccess = () => {
                 campaign?.transactionUrl ?? "",
                 transactionHash ?? ""
               )}
-              className="flex text-xs underline font-medium text-white"
+              className="inline-block max-w-min text-xs underline font-medium text-white"
             >
               #{nftId}
             </a>

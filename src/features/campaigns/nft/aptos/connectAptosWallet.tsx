@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { CopyIcon } from "@/@assets/icons/CopyIcon";
 import { DisconnectIcon } from "@/@assets/icons/DisconnectIcon";
 import copyTextToClipboard from "copy-text-to-clipboard";
-import { useRouter } from "next/router";
 import { ViewFiIcon } from "@/@assets/icons";
 import Loader from "@/@components/common/Loader";
 import useNftMintDataStore from "@/@store/nftMintDataStore";
@@ -14,6 +13,7 @@ import { useWidgetAppStore } from "@/@store/widgetStore";
 import { useOptionalDataStore } from "@/@store/optionalDataStore";
 import CampaignSuccessLayout from "@/layouts/CampaignSuccessLayout";
 import { getCSSVarByName } from "@/@utils";
+import { useModalContext } from "@/@components/context/ModalContext";
 
 export default function ConnectAptosWallet() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
@@ -27,6 +27,7 @@ export default function ConnectAptosWallet() {
     setLeaderboardUrl,
     setReward,
     setClaimStatus, } = useWidgetAppStore();
+  const { navigateModal } = useModalContext();
 
     const { optionalData1, optionalData2, optionalData3 } =
     useOptionalDataStore();
@@ -39,10 +40,9 @@ export default function ConnectAptosWallet() {
 
   } = useNftMintDataStore();
 
-  const router = useRouter()
   const redirectUrl = window.location.href;
   const connectWallet = async () => {
-    if (window.martian) {
+    if (window?.martian) {
       try {
         const accounts = await window.martian.connect();
         setWalletAddress(accounts.address);
@@ -55,7 +55,7 @@ export default function ConnectAptosWallet() {
     }
   };
   const disconnectWallet = async () => {
-    if (window.martian) {
+    if (window?.martian) {
       try {
         await window.martian.disconnect();
         setWalletAddress(null);
@@ -142,7 +142,7 @@ export default function ConnectAptosWallet() {
        "",
        data.transaction_hashes.mint
       );
-      router.push("/aptos-nft-success");
+      navigateModal("/aptos-nft-success");
     } catch (error) {
       console.log("failed to mint aptos NFT", error);
     } finally {

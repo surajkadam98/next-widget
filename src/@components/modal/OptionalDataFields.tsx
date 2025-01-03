@@ -5,7 +5,7 @@ import { useOptionalDataStore } from "@/@store/optionalDataStore";
 import { useWidgetAppStore } from "@/@store/widgetStore";
 import { getCSSVarByName, renderCampaignRoute } from "@/@utils";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useModalContext } from "../context/ModalContext";
 
 const defaultData = {
   optionalData1: "",
@@ -14,10 +14,10 @@ const defaultData = {
 };
 
 const OptionalDataFields = () => {
-  const router = useRouter()
   const { campaign, logo, widgetProp } = useAPIdataStore();
   const { setIsAnswered } = useWidgetAppStore();
   const { setOptionalData } = useOptionalDataStore();
+    const { navigateModal } = useModalContext();
 
   // Local state for inputs
   const [formData, setFormData] = useState({ ...defaultData });
@@ -51,7 +51,7 @@ const OptionalDataFields = () => {
   const handleSubmit = () => {
     setOptionalData(formData);
     setIsAnswered(true);
-    router.push(renderCampaignRoute(campaign));
+    navigateModal(renderCampaignRoute(campaign));
   };
 
   const widgetCurrentColor = getCSSVarByName("--widgetBg");

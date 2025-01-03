@@ -11,14 +11,14 @@ import {
   openInNewWindow,
   renderCampaignRoute,
 } from "@/@utils";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useModalContext } from "../context/ModalContext";
 
 
 const AdditionalTasks = () => {
-  const router = useRouter()
   const { campaign, logo, widgetProp } = useAPIdataStore();
   const { isAnswered, setIsTasksComplete } = useWidgetAppStore();
+  const { navigateModal } = useModalContext();
 
   const [isAllChecked, setIsAllChecked] = useState<boolean>(false);
   const [completedTasks, setCompletedTasks] = useState(
@@ -121,9 +121,9 @@ const AdditionalTasks = () => {
           onClick={() => {
             setIsTasksComplete(true);
             if (campaign?.optionalDataId && !isAnswered) {
-              router.push("/data-fields");
+              navigateModal("/data-fields");
             } else
-              router.push(
+              navigateModal(
                 renderCampaignRoute(
                  campaign
                 )

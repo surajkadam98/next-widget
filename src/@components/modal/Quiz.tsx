@@ -4,7 +4,7 @@ import { useAPIdataStore } from "@/@store/APIdataStore";
 import { useWidgetAppStore } from "@/@store/widgetStore";
 import { renderCampaignRoute, shuffle } from "@/@utils";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useModalContext } from "../context/ModalContext";
 
 interface IAnswer {
   id: number;
@@ -12,9 +12,9 @@ interface IAnswer {
 }
 
 const Quiz = () => {
-  const router = useRouter()
   const { campaign, logo, widgetProp } = useAPIdataStore();
   const { isTasksComplete, isAnswered, setIsQuizCorrect } = useWidgetAppStore();
+  const { navigateModal } = useModalContext();
 
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
   const [answers, setAnswers] = useState<IAnswer[]>([]);
@@ -98,10 +98,10 @@ const Quiz = () => {
                 campaign?.additionalTasks.length > 0 &&
                 !isTasksComplete
               ) {
-                router.push("/additional-tasks");
+                navigateModal("/additional-tasks");
               } else if (campaign?.optionalDataId && !isAnswered) {
-                router.push("/data-fields");
-              } else router.push(renderCampaignRoute(campaign));
+                navigateModal("/data-fields");
+              } else navigateModal(renderCampaignRoute(campaign));
             }}
             active={true}
             title={widgetProp?.button.continueWatching || "Continue"}

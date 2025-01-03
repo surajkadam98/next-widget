@@ -1,15 +1,15 @@
 import { openInNewTab } from "@/@utils";
 import { ViewFiIcon } from "@/@assets/icons/ViewFiIcon";
 import { useAPIdataStore } from "@/@store/APIdataStore";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useModalContext } from "../context/ModalContext";
 
 const ModalFooter = () => {
-  const router = useRouter()
   const { campaign, widgetProp } = useAPIdataStore();
+  const { navigateModal } = useModalContext();
 
   const handleClickTC = () => {
-    router.push("/terms");
+    navigateModal("/terms");
   };
 
   return (
